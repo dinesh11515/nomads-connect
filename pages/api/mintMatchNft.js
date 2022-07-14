@@ -4,9 +4,9 @@ import { ethers } from 'ethers'
 
 const mintMatchNft = async (req, res) => {
   await Moralis.start({
-    serverUrl: process.env.MORALIS_SERVER_URL,
-    appId: process.env.MORALIS_APP_ID,
-    masterKey: process.env.MORALIS_MASTER_KEY,
+    serverUrl: "https://g7ywhu8ocsfc.usemoralis.com:2053/server",
+    appId: "pzWwcygf5CVZ2MA3XEgqxq8snizI54n4pyozkwHU",
+    masterKey: "ijnqIiSBxMQX58586aNtJi7WfDmLHYVIgR90GJpu",
   })
 
   const metadata = {
@@ -47,6 +47,15 @@ const mintMatchNft = async (req, res) => {
   )
 
   const txReceipt = await tx.wait()
+
+  let chatTitle = `${req.body.names[0]} & ${req.body.names[1]}`;
+  const Chats = Moralis.Object.extend("Chats");
+  const chat = new Chats();
+  chat.set("title", chatTitle);
+  chat.set("owner",req.body.walletAddresses[0]);
+  chat.set("matcher",req.body.walletAddresses[1])
+  chat.save();
+  console.log("created chat with title " + chatTitle);
 
   res.status(200).send({
     message: 'success',

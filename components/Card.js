@@ -89,7 +89,6 @@ const Card = () => {
       console.log(object.get('title'));
       var ele =  document.createElement('input');
       ele.type="button";
-      // ele.setAttribute('onclick',openChat(object.id));
       ele.value=object.get('title')
       ele.onclick= function(){
         openChat(object.id);
@@ -97,8 +96,6 @@ const Card = () => {
       var listItem = document.createElement('li');
       listItem.append(ele);
       roomList.appendChild(listItem);
-      // roomList.appendChild(ele);
-      // roomList.appendChild("<br />")
     }
 
 }
