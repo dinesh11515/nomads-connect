@@ -3,6 +3,8 @@ import Image from 'next/image'
 import profilePic from '../assets/profile-pic.avif'
 import logo from '../assets/logo.png'
 import { IoIosNotifications } from 'react-icons/io'
+import { NomadsContext } from '../context/NomadsContext'
+import { useContext } from 'react';
 
 const style = {
     wrapper: `flex items-center bg-white w-full h-20 p-8 justify-evenly`,
@@ -13,11 +15,11 @@ const style = {
   }
 
 function CardHeader() {
+    const {currentUser} = useContext(NomadsContext)
     return (
         <div className={style.wrapper}>
         <Image
-          // src={currentUser?.imageUrl || profilePic}
-          src = {profilePic}
+          src={currentUser?.imageUrl || profilePic}
           width={40}
           height={40}
           alt='profile-pic'

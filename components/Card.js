@@ -9,6 +9,7 @@ import {Moralis} from 'moralis'
 import Chat from './Chat'
 import { useMemo } from 'react'
 import { useMoralis } from 'react-moralis'
+import { client } from "../lib/sanity"
 
 const style = {
   wrapper: `h-[45rem] w-[27rem] flex flex-col rounded-lg overflow-hidden`,
@@ -18,14 +19,18 @@ const style = {
   noMoreText: `text-xl text-white`,
   swipesContainer: `w-full h-full overflow-hidden`,
   chatMain:`w-full flex-1 relative flex flex-col bg-blue-100`,
+  userRegister : `w-full flex-1 relative flex flex-col bg-blue-100`,
 }
 
 const Card = () => {
   const {user} = useMoralis()
-  const { cardsData } = useContext(NomadsContext)
+  const { currentAccount, cardsData ,userRegister,requestToCreateUserProfile} = useContext(NomadsContext)
   const [chat,setChat] = useState(false);
   const [group,setGroup] =useState(true);
   const [chatId,setChatId] = useState(null);
+  const [imageAsset, setImageAsset] = useState();
+
+  
   useEffect(()=>{
       Moralis.initialize("pzWwcygf5CVZ2MA3XEgqxq8snizI54n4pyozkwHU");
       Moralis.serverURL = "https://g7ywhu8ocsfc.usemoralis.com:2053/server";
@@ -33,7 +38,22 @@ const Card = () => {
         getGroupChats();
       }
   },[chat])
-
+  
+  const uploadImage = (e) => {
+    const selectedFile = e.target.files[0]
+    client.assets
+      .upload("image", selectedFile, {
+        contentType: selectedFile.type,
+        filename: selectedFile.name,
+      })
+      .then((document) => {
+        setImageAsset(document)
+      })
+      .catch((error) => {
+        console.log("Upload failed:", error.message)
+      })
+  }
+  
   function displayChat(){
     if(chat && !group){
       return(
@@ -50,6 +70,27 @@ const Card = () => {
             </ul>
           </div>
         </div>
+      )
+    }
+    else if(!userRegister){
+      return(
+        <div className={style.userRegister}>
+        <form className='flex flex-col'>
+          <label for="name">Name :</label>
+          <input type="text" id="name" name="name"/>
+          <label>
+          <div >
+              <p className="text-lg">Click to upload</p>
+          </div>
+          <input
+            type="file"
+            name="upload-image"
+            onChange={uploadImage}
+          />
+          </label>
+          <input type="button" value="Submit" onClick={()=>{requestToCreateUserProfile(currentAccount,document.getElementById("name").value,imageAsset)}}/>
+        </form>
+      </div>
       )
     }
     else{

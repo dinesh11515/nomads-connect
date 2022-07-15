@@ -7,6 +7,13 @@ const createUserOnSanity = async (req, res) => {
       _id: req.body.userWalletAddress,
       name: req.body.name,
       walletAddress: req.body.userWalletAddress,
+      profileImage: {
+        _type: "image",
+        asset: {
+          _type: "reference",
+          _ref: req.body.imageAsset?._id,
+        },
+      },
     }
 
     await client.createIfNotExists(userDoc)

@@ -9,21 +9,28 @@ export const NomadsProvider = ({ children }) => {
   const [cardsData, setCardsData] = useState([])
   const [currentAccount, setCurrentAccount] = useState()
   const [currentUser, setCurrentUser] = useState()
+  const [userRegister,setUserRegister] = useState(false)
 
   useEffect(() => {
     checkWalletConnection()
 
-    if (isAuthenticated) {
+    if (userRegister && isAuthenticated) {
       requestUsersData(user.get('ethAddress'))
       requestCurrentUserData(user.get('ethAddress'))
     }
-  }, [isAuthenticated])
+  }, [isAuthenticated,userRegister])
 
   const checkWalletConnection = async () => {
     if (isAuthenticated) {
       const address = user.get('ethAddress')
       setCurrentAccount(address)
-      requestToCreateUserProfile(address, faker.name.findName())
+      const response = await fetch(
+        `/api/fetchCurrentUserData?activeAccount=${address}`,
+      )
+      const data = await response.json();
+      if(data.message=="success"){
+        setUserRegister(true)
+      }
     } else {
       setCurrentAccount('')
     }
@@ -94,7 +101,7 @@ export const NomadsProvider = ({ children }) => {
     }
   }
 
-  const requestToCreateUserProfile = async (walletAddress, name) => {
+  const requestToCreateUserProfile = async (walletAddress, name ,imageAsset ) => {
     try {
       await fetch(`/api/createUser`, {
         method: 'POST',
@@ -104,13 +111,14 @@ export const NomadsProvider = ({ children }) => {
         body: JSON.stringify({
           userWalletAddress: walletAddress,
           name: name,
+          imageAsset: imageAsset,
         }),
       })
     } catch (error) {
       console.error(error)
     }
   }
-
+  
   const requestCurrentUserData = async walletAddress => {
     try {
       const response = await fetch(
@@ -119,6 +127,7 @@ export const NomadsProvider = ({ children }) => {
       const data = await response.json()
 
       setCurrentUser(data.data)
+      
     } catch (error) {
       console.error(error)
     }
@@ -137,6 +146,8 @@ export const NomadsProvider = ({ children }) => {
     }
   }
 
+  
+
   return (
     <NomadsContext.Provider
       value={{
@@ -146,6 +157,8 @@ export const NomadsProvider = ({ children }) => {
         handleRightSwipe,
         currentAccount,
         currentUser,
+        userRegister,
+        requestToCreateUserProfile,
       }}
     >
       {children}
