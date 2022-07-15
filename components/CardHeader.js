@@ -32,10 +32,10 @@ function CardHeader() {
           alt='logo'
           className={style.logo}
         />
-        <div className='flex items-center'>
+        {/* <div className='flex items-center'>
           <IoIosNotifications className={style.notificationIcon} />
           <div className={style.notifications} />
-        </div>
+        </div> */}
       </div>
     );
 }
