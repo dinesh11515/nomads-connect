@@ -28,7 +28,8 @@ export const NomadsProvider = ({ children }) => {
         `/api/fetchCurrentUserData?activeAccount=${address}`,
       )
       const data = await response.json();
-      if(data.message=="success"){
+      if(data.data!=undefined){
+        console.log("yes")
         setUserRegister(true)
       }
     } else {

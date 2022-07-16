@@ -23,7 +23,7 @@ const style = {
 }
 
 const Card = () => {
-  const {user} = useMoralis()
+  const {user,isAuthenticated} = useMoralis()
   const { currentAccount, cardsData ,userRegister,requestToCreateUserProfile} = useContext(NomadsContext)
   const [chat,setChat] = useState(false);
   const [group,setGroup] =useState(true);
@@ -72,7 +72,14 @@ const Card = () => {
         </div>
       )
     }
-    else if(!userRegister){
+    else if(!isAuthenticated){
+      return(
+        <div className={style.cardMain}>
+          Connect your wallet
+        </div>
+      )
+    }
+    else if(!userRegister && isAuthenticated){
       return(
         <div className={style.userRegister}>
         <form className='flex flex-col'>
