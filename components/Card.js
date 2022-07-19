@@ -20,6 +20,7 @@ const style = {
   swipesContainer: `w-full h-full overflow-hidden`,
   chatMain:`w-full flex-1 relative flex flex-col bg-blue-100`,
   userRegister : `w-full flex-1 relative flex flex-col bg-blue-100`,
+  btn: `bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded w-1/2 mt-5`
 }
 
 const Card = () => {
@@ -65,8 +66,9 @@ const Card = () => {
     else if(chat && group){
       return (
         <div className={style.chatMain}>
-          <div className="p-5" id="chatRooms">
-            <ul id="roomList">
+          <h1 className='mt-5 ml-5 text-2xl'>Chat groups : </h1>
+          <div className="pl-12 pt-2" id="chatRooms">
+            <ul className="list-disc" id="roomList">
             </ul>
           </div>
         </div>
@@ -82,9 +84,9 @@ const Card = () => {
     else if(!userRegister && isAuthenticated){
       return(
         <div className={style.userRegister}>
-        <form className='flex flex-col'>
-          <label for="name">Name :</label>
-          <input type="text" id="name" name="name"/>
+        <form className='flex flex-col p-10 space-y-2'>
+          <label htmlFor="name">Name :</label>
+          <input type="text" id="name" className="name w-3/4 rounded"/>
           <label>
           <div >
               <p className="text-lg">Click to upload</p>
@@ -95,7 +97,7 @@ const Card = () => {
             onChange={uploadImage}
           />
           </label>
-          <input type="button" value="Submit" onClick={()=>{requestToCreateUserProfile(currentAccount,document.getElementById("name").value,imageAsset)}}/>
+          <input className={style.btn} type="button" value="Submit" onClick={()=>{requestToCreateUserProfile(currentAccount,document.getElementById("name").value,imageAsset)}}/>
         </form>
       </div>
       )
@@ -134,7 +136,6 @@ const Card = () => {
 
     for (let i = 0; i < results.length; i++) {
       const object = results[i];
-      console.log(object.get('title'));
       var ele =  document.createElement('input');
       ele.type="button";
       ele.value=object.get('title')
